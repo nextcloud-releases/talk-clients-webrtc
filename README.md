@@ -1,16 +1,39 @@
-# Fork of WebRTC client library
+# WebRTC client library
 
-This is a fork of https://webrtc.googlesource.com/src to host our binaries for the iOS and Android clients.
+This repository contains the tooling to build the WebRTC libraries for the Nextcloud Talk Android and iOS apps.
 
-## Update todo
+See actual stable branches:
+  https://chromiumdash.appspot.com/branches
 
-* Checkout the `git checkout main` branch
-* Pull from https://webrtc.googlesource.com/src: `git pull upstream main`
-* Push updated main to nextcloud-releases `git push nextcloud main`
-* Create a tag: `git tag -s -a 'YYYY-MM-DD' -m 'Tag YYYY-MM-DD'`
-* Push the tag: `git push nextcloud YYYY-MM-DD`
-* Make the tag a release: https://github.com/nextcloud-releases/talk-clients-webrtc/tags
-* Build the library for:
-    * iOS: https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/index.md
-    * Android: https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
-* Upload the binaries to the release: https://github.com/nextcloud-releases/talk-clients-webrtc/releases
+Official WebRTC build guides:
+  https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
+  https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/index.md
+
+## Build for Android 
+
+To build WebRTC for Android follow those steps:
+
+```
+docker build -t webrtc .
+mkdir webrtc
+docker run -it --name webrtc-build -v "$(pwd)"/webrtc webrtc-build
+# now in container
+fetch --nohooks webrtc_android
+gclient sync
+cd src
+# You'll ask for some interactions:
+#  1. Skip snapcraft
+#  2. Configure timezone
+build/install-build-deps-android.sh
+git checkout -b branch_$BRANCH branch-heads/$BRANCH
+gclient revert
+gclient sync
+tools_webrtc/android/build_aar.py
+```
+
+## Build for iOS
+
+
+## Releases
+
+- v96.4664.0 [809830f1b39f9d0933dd979c9e8f32a4a922b71c](https://chromium.googlesource.com/external/webrtc/+/809830f1b39f9d0933dd979c9e8f32a4a922b71c)
