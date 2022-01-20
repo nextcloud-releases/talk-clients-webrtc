@@ -3,11 +3,11 @@
 This repository contains the tooling to build the WebRTC libraries for the Nextcloud Talk Android and iOS apps.
 
 See actual stable branches:
-  https://chromiumdash.appspot.com/branches
+- https://chromiumdash.appspot.com/branches
 
 Official WebRTC build guides:
-  https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
-  https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/index.md
+- https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
+- https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/index.md
 
 ## Build for Android 
 
