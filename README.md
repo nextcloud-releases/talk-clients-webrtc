@@ -33,6 +33,24 @@ tools_webrtc/android/build_aar.py
 
 ## Build for iOS
 
+Requirements:
+
+- XCode version 13.0
+
+To build WebRTC for iOS follow those steps:
+
+```
+mkdir webrtc_ios
+cd webrtc_ios
+fetch --nohooks webrtc_ios
+gclient sync
+cd src
+git checkout -b branch_$BRANCH branch-heads/$BRANCH
+gclient sync
+cd tools_webrtc/ios
+python build_ios_libs.py
+```
+
 
 ## Releases
 
