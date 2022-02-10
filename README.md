@@ -45,11 +45,12 @@ fetch --nohooks webrtc_ios
 gclient sync
 cd src
 git checkout -b branch_$BRANCH branch-heads/$BRANCH
-gclient sync
+gclient sync -D
 cd tools_webrtc/ios
 python build_ios_libs.py
 ```
 
+If build succeeds, you will find the **WebRTC.xcframework** in `src/out_ios_libs/WebRTC.xcframework`
 
 ## Releases
 
