@@ -26,8 +26,7 @@ cd src
 #  2. Configure timezone
 build/install-build-deps-android.sh
 git checkout -b branch_$BRANCH branch-heads/$BRANCH
-gclient revert
-gclient sync
+gclient sync -D
 tools_webrtc/android/build_aar.py
 ```
 
