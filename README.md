@@ -34,7 +34,7 @@ tools_webrtc/android/build_aar.py
 
 Requirements:
 
-- XCode version 13.0
+- XCode version 13.0 (exact version)
 
 To build WebRTC for iOS follow those steps:
 
@@ -51,6 +51,27 @@ python build_ios_libs.py
 ```
 
 If build succeeds, you will find the **WebRTC.xcframework** in `src/out_ios_libs/WebRTC.xcframework`
+
+### Building on M1 Macs
+
+Check if the command `python` is available. Most likley you need to link it (adjust the Xcode path accordingly):
+
+```
+sudo ln -s /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /usr/local/bin/python
+```
+
+### Building multiple architectures
+
+By default the following architectures are build:
+```
+'device:arm64', 'simulator:arm64', 'simulator:x64'
+```
+
+It is also possible to build for catalyst, the build command would look like this:
+
+```
+python build_ios_libs.py --arch "device:arm64" "simulator:arm64" "simulator:x64" "catalyst:arm64" "catalyst:x64"
+```
 
 ## Releases
 
