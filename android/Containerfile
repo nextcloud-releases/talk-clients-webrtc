@@ -28,10 +28,13 @@ RUN git clone --depth 1 https://chromium.googlesource.com/chromium/tools/depot_t
 ENV PATH="/opt/depot_tools:${PATH}"
 
 RUN mkdir /webrtc && chown $UID:$GID /webrtc
+WORKDIR /webrtc
+
+ADD ./container-script.sh container-script.sh
 
 USER $USERNAME
 
 RUN fetch --help > /dev/null && \
     gclient --help > /dev/null
 
-WORKDIR /webrtc
+ENTRYPOINT bash 

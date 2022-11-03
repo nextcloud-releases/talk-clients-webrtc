@@ -11,24 +11,22 @@ Official WebRTC build guides:
 
 ## Build for Android 
 
+Requirements:
+- [Podman](https://docs.podman.io/en/latest/)
+
 To build WebRTC for Android follow those steps:
 
 ```
-docker build -t webrtc .
-mkdir webrtc
-docker run -it --name webrtc-build -v "$(pwd)"/webrtc webrtc-build
-# now in container
-fetch --nohooks webrtc_android
-gclient sync
-cd src
-# You'll ask for some interactions:
-#  1. Skip snapcraft
-#  2. Configure timezone
-build/install-build-deps-android.sh
-git checkout -b branch_$BRANCH branch-heads/$BRANCH
-gclient sync -D
-tools_webrtc/android/build_aar.py
+./build.sh $BRANCH
 ```
+
+The previous command creates the container image and starts the container. Manual interaction is needed:
+
+```
+./container-script.sh
+```
+
+First run needs around an hour. Manual interactions are needed during the run.
 
 ## Build for iOS
 
