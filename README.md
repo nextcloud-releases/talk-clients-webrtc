@@ -2,8 +2,11 @@
 
 This repository contains the tooling to build the WebRTC libraries for the Nextcloud Talk Android and iOS apps.
 
-See actual stable branches:
-- https://chromiumdash.appspot.com/branches
+Updates of WebRTC for the Talk clients will be done on a monthly basis.
+
+The acutal stable version will be user:
+- Android: https://chromiumdash.appspot.com/releases?platform=Android
+- iOS: https://chromiumdash.appspot.com/releases?platform=iOS
 
 Official WebRTC build guides:
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
@@ -25,7 +28,7 @@ cd src
 #  1. Skip snapcraft
 #  2. Configure timezone
 build/install-build-deps-android.sh
-git checkout -b branch_$BRANCH branch-heads/$BRANCH
+git checkout $TAG
 gclient sync -D
 tools_webrtc/android/build_aar.py
 ```
@@ -44,7 +47,7 @@ cd webrtc_ios
 fetch --nohooks webrtc_ios
 gclient sync
 cd src
-git checkout -b branch_$BRANCH branch-heads/$BRANCH
+git checkout $TAG
 gclient sync -D
 cd tools_webrtc/ios
 python build_ios_libs.py
@@ -75,4 +78,6 @@ python build_ios_libs.py --arch "device:arm64" "simulator:arm64" "simulator:x64"
 
 ## Releases
 
+- 🤖 [v106.0.5249.126](https://chromium.googlesource.com/chromium/src/+/refs/tags/106.0.5249.126) (exceptionally an extended stable release is used)
+- 🍏 [v106.0.5249.92](https://chromium.googlesource.com/chromium/src/+/refs/tags/106.0.5249.92) (exceptionally an extended stable release is used)
 - v96.4664.0 [809830f1b39f9d0933dd979c9e8f32a4a922b71c](https://chromium.googlesource.com/external/webrtc/+/809830f1b39f9d0933dd979c9e8f32a4a922b71c)
