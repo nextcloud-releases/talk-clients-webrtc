@@ -2,8 +2,10 @@
 
 This repository contains the tooling to build the WebRTC libraries for the Nextcloud Talk Android and iOS apps.
 
-See actual stable branches:
+Pick the latest stable branch from that table (click on the brunch number in the column `WebRTC`):
 - https://chromiumdash.appspot.com/branches
+
+In the following build instructions replace `$BRANCH` with the picked branch number.
 
 Official WebRTC build guides:
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
@@ -11,24 +13,22 @@ Official WebRTC build guides:
 
 ## Build for Android 
 
+Requirements:
+- [Podman](https://docs.podman.io/en/latest/)
+
 To build WebRTC for Android follow those steps:
 
 ```
-docker build -t webrtc .
-mkdir webrtc
-docker run -it --name webrtc-build -v "$(pwd)"/webrtc webrtc-build
-# now in container
-fetch --nohooks webrtc_android
-gclient sync
-cd src
-# You'll ask for some interactions:
-#  1. Skip snapcraft
-#  2. Configure timezone
-build/install-build-deps-android.sh
-git checkout -b branch_$BRANCH branch-heads/$BRANCH
-gclient sync -D
-tools_webrtc/android/build_aar.py
+./build.sh $BRANCH
 ```
+
+The previous command creates the container image and starts the container. Manual interaction is needed:
+
+```
+./container-script.sh
+```
+
+First run needs around an hour. Manual interactions are needed during the run.
 
 ## Build for iOS
 
@@ -72,7 +72,3 @@ It is also possible to build for catalyst, the build command would look like thi
 ```
 python build_ios_libs.py --arch "device:arm64" "simulator:arm64" "simulator:x64" "catalyst:arm64" "catalyst:x64"
 ```
-
-## Releases
-
-- v96.4664.0 [809830f1b39f9d0933dd979c9e8f32a4a922b71c](https://chromium.googlesource.com/external/webrtc/+/809830f1b39f9d0933dd979c9e8f32a4a922b71c)
