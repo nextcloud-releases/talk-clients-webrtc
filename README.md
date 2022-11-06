@@ -34,7 +34,8 @@ First run needs around an hour. Manual interactions are needed during the run.
 
 Requirements:
 
-- XCode version 13.0 (exact version)
+- Xcode version 13.0+
+- [Depot tools](https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html#_setting_up) (latest master)
 
 To build WebRTC for iOS follow those steps:
 
