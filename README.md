@@ -22,13 +22,9 @@ To build WebRTC for Android follow those steps:
 ./build.sh $BRANCH
 ```
 
-The previous command creates the container image and starts the container. Manual interaction is needed:
-
-```
-./container-script.sh
-```
-
 First run needs around an hour. Manual interactions are needed during the run.
+
+The created `aar` can be found in `result/android` afterwards.
 
 ## Build for iOS
 

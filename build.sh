@@ -16,6 +16,10 @@ podman image exists webrtc-build || podman build --tag webrtc-build android
 
 mkdir -p workdir
 podman unshare chown 1000:1000 -R workdir/
+
+if podman container exists webrtc-build; then
+  podman container rm webrtc-build
+fi
 podman container run --interactive \
   --tty \
   --env WEBRTC_BRANCH="$BRANCH" \

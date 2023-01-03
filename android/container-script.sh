@@ -3,10 +3,16 @@ set -euo pipefail
 IFS=$'\n\t'
 
 cd workdir || exit
-fetch --nohooks webrtc_android
+if [[ ! -d "src" ]]; then
+  fetch --nohooks webrtc_android
+fi
 gclient sync
 cd src || exit
-git checkout -b "$WEBRTC_BRANCH" branch-heads/"$WEBRTC_BRANCH"
+if [[ -z $(git branch --list "$WEBRTC_BRANCH") ]]; then
+  git checkout -b "$WEBRTC_BRANCH" branch-heads/"$WEBRTC_BRANCH"
+else
+  git pull
+fi
 echo "You'll ask for some interactions:"
 echo "  1. Skip snapcraft"
 echo "  2. Configure timezone"
