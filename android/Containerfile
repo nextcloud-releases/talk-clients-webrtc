@@ -37,4 +37,4 @@ USER $USERNAME
 RUN fetch --help > /dev/null && \
     gclient --help > /dev/null
 
-ENTRYPOINT bash -x "./container-script.sh"
+ENTRYPOINT bash -c "./container-script.sh"
