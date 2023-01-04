@@ -10,7 +10,12 @@ usage() {
 }
 expr "$*" : ".*--help" > /dev/null && usage
 
-BRANCH=${1:-"master"}
+if [[ $# -eq 0 ]] ; then
+    echo 'no branch set as parameter'
+    exit 0
+fi
+
+BRANCH=$1
 
 podman image exists webrtc-build || podman build --tag webrtc-build android 
 
