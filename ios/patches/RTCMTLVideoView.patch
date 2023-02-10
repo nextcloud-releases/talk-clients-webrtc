@@ -1,0 +1,13 @@
+diff --git a/sdk/objc/components/renderer/metal/RTCMTLVideoView.m b/sdk/objc/components/renderer/metal/RTCMTLVideoView.m
+index c5d9e4385f..1865391f31 100644
+--- a/sdk/objc/components/renderer/metal/RTCMTLVideoView.m
++++ b/sdk/objc/components/renderer/metal/RTCMTLVideoView.m
+@@ -139,7 +139,7 @@
+   NSAssert(view == self.metalView, @"Receiving draw callbacks from foreign instance.");
+   RTC_OBJC_TYPE(RTCVideoFrame) *videoFrame = self.videoFrame;
+   // Skip rendering if we've already rendered this frame.
+-  if (!videoFrame || videoFrame.width <= 0 || videoFrame.height <= 0 ||
++  if (!videoFrame || videoFrame.width <= 1 || videoFrame.height <= 1 ||
+       videoFrame.timeStampNs == self.lastFrameTimeNs) {
+     return;
+   }
