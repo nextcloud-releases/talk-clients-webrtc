@@ -26,6 +26,8 @@ First run needs around an hour. Manual interactions are needed during the run.
 
 The created `aar` can be found in `result/android` afterwards.
 
+To use this `aar` in the nextcloud android talk app, follow the steps from https://github.com/nextcloud-deps/android-talk-webrtc#packaging-instructions
+
 ## Build for iOS
 
 Requirements:
