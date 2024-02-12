@@ -1,0 +1,36 @@
+diff --git a/rtc_base/physical_socket_server.cc b/rtc_base/physical_socket_server.cc
+index b0af1c20ce..d355b4a223 100644
+--- a/rtc_base/physical_socket_server.cc
++++ b/rtc_base/physical_socket_server.cc
+@@ -1427,6 +1427,16 @@ bool PhysicalSocketServer::WaitSelect(int cmsWait, bool process_io) {
+         // "select"ing a file descriptor that is equal to or larger than
+         // FD_SETSIZE will result in undefined behavior.
+         RTC_DCHECK_LT(fd, FD_SETSIZE);
++
++        // Patched from https://bugs.chromium.org/p/webrtc/issues/detail?id=7585
++        // File descriptor is too big for select, ignore it to avoid crashing.
++        // At the same time, close that descriptor, there is nothing we can do with it.
++        if (fd >= FD_SETSIZE) {
++          RTC_LOG(LS_WARNING) << "Closing fd out of range: " << fd;
++          close(fd);
++          continue;
++        }
++
+         if (fd > fdmax)
+           fdmax = fd;
+ 
+@@ -1470,6 +1480,14 @@ bool PhysicalSocketServer::WaitSelect(int cmsWait, bool process_io) {
+ 
+         int fd = pdispatcher->GetDescriptor();
+ 
++        // Patched from https://bugs.chromium.org/p/webrtc/issues/detail?id=7585
++        // Descriptor is too big for select() and was closed before the select.
++        // Trigger some read/write actions so that we detect and handle the close through error handling.
++        if (fd >= FD_SETSIZE) {
++          ProcessEvents(pdispatcher, true, true, false, false);
++          continue;
++        }
++
+         bool readable = FD_ISSET(fd, &fdsRead);
+         if (readable) {
+           FD_CLR(fd, &fdsRead);
