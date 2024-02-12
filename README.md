@@ -71,3 +71,9 @@ It is also possible to build for catalyst, the build command would look like thi
 ```
 python build_ios_libs.py --arch "device:arm64" "simulator:arm64" "simulator:x64" "catalyst:arm64" "catalyst:x64"
 ```
+
+### Creating a debug build
+
+```
+python build_ios_libs.py --build_config debug
+```
