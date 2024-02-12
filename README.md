@@ -45,6 +45,7 @@ gclient sync
 cd src
 git checkout -b branch_$BRANCH branch-heads/$BRANCH
 gclient sync -D
+git apply {path-to-this-repo}/ios/patches/*.patch
 cd tools_webrtc/ios
 python build_ios_libs.py
 ```
