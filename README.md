@@ -8,8 +8,8 @@ Pick the latest stable branch from that table (click on the brunch number in the
 In the following build instructions replace `$BRANCH` with the picked branch number.
 
 Official WebRTC build guides:
-- https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md
-- https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/index.md
+- https://webrtc.googlesource.com/src/+/main/docs/native-code/android/README.md
+- https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/README.md
 
 ## Build for Android 
 
