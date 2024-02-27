@@ -18,5 +18,5 @@ echo "  1. Skip snapcraft"
 echo "  2. Configure timezone"
 read -r -p "Press key to continue.. " -n1 -s
 gclient sync -D
-sudo build/install-build-deps-android.sh
+sudo build/install-build-deps.sh
 tools_webrtc/android/build_aar.py
