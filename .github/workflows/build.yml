@@ -1,0 +1,71 @@
+# SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+
+name: Build iOS WebRTC
+
+on:
+  workflow_dispatch:
+    inputs:
+      webrtc-branch:
+        description: 'WebRTC branch (numeric)'
+        required: true
+        type: number
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-15
+
+    steps:
+    - name: Checkout app
+      uses: actions/checkout@v4
+      with:
+        path: repo
+
+    - name: Setup depot tools
+      run: |
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+        readlink -f depot_tools >> $GITHUB_PATH
+
+    - name: Link python
+      run: sudo ln -s /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /usr/local/bin/python
+
+    - name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
+      run: |
+        mkdir webrtc_ios && cd webrtc_ios
+        fetch --nohooks webrtc_ios
+        gclient sync
+        cd src
+        git checkout -b branch_${{ github.event.inputs.webrtc-branch }} branch-heads/${{ github.event.inputs.webrtc-branch }}
+        gclient sync -D --no-history
+
+        echo "Applying patches..."
+        pwd
+        echo ${{ github.workspace }}
+        ls -ahl ${{ github.workspace }}/repo/ios/patches/*.patch
+        git apply -v ${{ github.workspace }}/repo/ios/patches/*.patch
+
+        echo "Building..."
+        cd tools_webrtc/ios
+        python build_ios_libs.py
+
+    # upload-artifact will always zip files, even if it's already a zip, so we don't zip it here for now
+    #- name: Zip & generate checksum
+    #  run: |
+    #    cd webrtc_ios/src/out_ios_libs/
+    #    zip -r WebRTC.xcframework.zip WebRTC.xcframework
+    #    swift package compute-checksum WebRTC.xcframework.zip
+
+    - name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: WebRTC.xcframework
+        path: webrtc_ios/src/out_ios_libs/WebRTC.xcframework
+        retention-days: 4
