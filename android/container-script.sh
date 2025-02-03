@@ -13,7 +13,7 @@ if [[ -z $(git branch --list "$WEBRTC_BRANCH") ]]; then
 else
   git pull
 fi
-echo "You'll ask for some interactions:"
+echo "You'll be asked for some interactions:"
 echo "  1. Skip snapcraft"
 echo "  2. Configure timezone"
 read -r -p "Press key to continue.. " -n1 -s
