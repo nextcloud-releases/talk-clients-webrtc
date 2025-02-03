@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   build:
-    name: Build
+    name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
     runs-on: macos-15
 
     steps:
@@ -66,6 +66,6 @@ jobs:
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
-        name: WebRTC.xcframework
+        name: WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework
         path: webrtc_ios/src/out_ios_libs/WebRTC.xcframework
         retention-days: 4
