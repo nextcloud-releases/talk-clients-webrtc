@@ -17,20 +17,20 @@ fi
 
 BRANCH=$1
 
-podman image exists webrtc-build || podman build --tag webrtc-build android 
+docker build --tag webrtc-build android 
 
 mkdir -p workdir
-podman unshare chown 1000:1000 -R workdir/
 
-if podman container exists webrtc-build; then
-  podman container rm webrtc-build
-fi
-podman container run --interactive \
+chmod 777 workdir
+
+docker container rm webrtc-build
+
+docker container run --interactive \
   --tty \
   --env WEBRTC_BRANCH="$BRANCH" \
   --name webrtc-build \
   --volume "$(pwd)"/workdir:/webrtc/workdir:rw \
-  localhost/webrtc-build
+  webrtc-build:latest
 
 mkdir -p result/android
 cp workdir/src/*.aar result/android
