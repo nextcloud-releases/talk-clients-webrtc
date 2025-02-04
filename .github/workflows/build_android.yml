@@ -1,0 +1,66 @@
+# SPDX-FileCopyrightText: 2025 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+
+name: Build Android WebRTC
+
+on:
+  workflow_dispatch:
+    inputs:
+      webrtc-branch:
+        description: 'WebRTC branch (numeric)'
+        required: true
+        type: number
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Android WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout app
+      uses: actions/checkout@v4
+      with:
+        path: repo
+
+    - name: Setup depot tools
+      run: |
+        git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+        readlink -f depot_tools >> $GITHUB_PATH
+
+    # From https://github.com/actions/runner-images/issues/10386
+    - name: Remove unnecessary directories to free up space
+      run: |
+        df -h
+        sudo rm -rf /usr/local/.ghcup
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+        sudo rm -rf /usr/local/lib/android/sdk/ndk
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        df -h      
+
+    - name: Build Android WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
+      run: |
+        mkdir webrtc_android && cd webrtc_android
+        fetch --nohooks webrtc_android
+        gclient sync
+        cd src
+        git checkout -b branch_${{ github.event.inputs.webrtc-branch }} branch-heads/${{ github.event.inputs.webrtc-branch }}
+        gclient sync -D --no-history
+
+        echo "Building..."
+        tools_webrtc/android/build_aar.py
+
+    - name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: libwebrtc-${{ github.event.inputs.webrtc-branch }}.aar
+        path: webrtc_android/src/libwebrtc.aar
+        retention-days: 4
