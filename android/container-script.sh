@@ -13,10 +13,10 @@ if [[ -z $(git branch --list "$WEBRTC_BRANCH") ]]; then
 else
   git pull
 fi
-echo "You'll be asked for some interactions:"
-echo "  1. Skip snapcraft"
-echo "  2. Configure timezone"
-read -r -p "Press key to continue.. " -n1 -s
+echo "***************************************************************"
+echo "During the build, you'll be asked for some interactions (Configure timezone, ...)"
+echo "***************************************************************"
+
 gclient sync -D
 sudo build/install-build-deps.sh
 tools_webrtc/android/build_aar.py

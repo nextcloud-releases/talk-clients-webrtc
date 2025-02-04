@@ -11,7 +11,7 @@ Official WebRTC build guides:
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/android/README.md
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/README.md
 
-### Build Android
+## Build Android
 For android it is possible to build on github CI (recommended) or locally.
 Both of them create the `aar` file.
 To use this inside the nextcloud android talk app, follow the steps from https://github.com/nextcloud-deps/android-talk-webrtc#packaging-instructions
