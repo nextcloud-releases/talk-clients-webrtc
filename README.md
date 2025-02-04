@@ -11,22 +11,32 @@ Official WebRTC build guides:
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/android/README.md
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/README.md
 
-## Build for Android 
+### Build Android
+For android it is possible to build on github CI (recommended) or locally.
+Both of them create the `aar` file.
+To use this inside the nextcloud android talk app, follow the steps from https://github.com/nextcloud-deps/android-talk-webrtc#packaging-instructions
 
-Requirements:
-- [Podman](https://docs.podman.io/en/latest/)
+### Build Android lib on github CI (recommended)
+
+- In https://github.com/nextcloud-releases/talk-clients-webrtc go to Actions
+- got to Build AndroidWebRTC
+- click "Run workflow"
+- enter branch number (e.g. "1234") & confirm with "Run workflow"
+- When finished, the resulting zipped aar file should be attached to the build.
+
+
+### Build Android lib locally (in case CI won't work)
 
 To build WebRTC for Android follow those steps:
 
 ```
-./build.sh $BRANCH
+./build-android.sh $BRANCH
 ```
 
-First run needs around an hour. Manual interactions are needed during the run.
+First run needs around an hour. Manual interactions are needed during the run. It may happen that the script gets stuck. If this happens without any error message, just start it again.
 
 The created `aar` can be found in `result/android` afterwards.
 
-To use this `aar` in the nextcloud android talk app, follow the steps from https://github.com/nextcloud-deps/android-talk-webrtc#packaging-instructions
 
 ## Build for iOS
 

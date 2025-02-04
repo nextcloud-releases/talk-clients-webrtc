@@ -20,13 +20,11 @@ BRANCH=$1
 docker build --tag webrtc-build android 
 
 mkdir -p workdir
-# docker unshare chown 1000:1000 -R workdir/
 
 chmod 777 workdir
 
-#if docker container exists webrtc-build; then
-#  docker container rm webrtc-build
-#fi
+docker container rm webrtc-build
+
 docker container run --interactive \
   --tty \
   --env WEBRTC_BRANCH="$BRANCH" \
