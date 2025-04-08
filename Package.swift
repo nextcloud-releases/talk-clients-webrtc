@@ -1,8 +1,8 @@
 // swift-tools-version:5.7.1
 import PackageDescription
 
-let webrtcVersion = "121.6167.0"
-let webrtcChecksum = "f295b74eff1ff9eef14dd664834a6df413f79a65b91839d12e03b62b79639c52"
+let webrtcVersion = "135.7049.0"
+let webrtcChecksum = "43d74eb9900b9227ba98befe5d4760f9ea14ed66c3d88f04d1805ce1fdfd38f2"
 
 let package = Package(
     name: "WebRTC",
