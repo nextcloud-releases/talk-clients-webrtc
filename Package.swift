@@ -17,7 +17,7 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "WebRTC",
-            url: "https://github.com/nextcloud-releases/talk-clients-webrtc/releases/download/\(webrtcVersion)/WebRTC.xcframework.zip",
+            url: "https://github.com/nextcloud-releases/talk-clients-webrtc/releases/download/\(webrtcVersion)/WebRTC7049.xcframework.zip",
             // Generate checksum with `swift package compute-checksum WebRTC.xcframework.zip`
             checksum: webrtcChecksum
         ),
