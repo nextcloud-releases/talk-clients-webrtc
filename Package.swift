@@ -2,7 +2,7 @@
 import PackageDescription
 
 let webrtcVersion = "135.7049.0"
-let webrtcChecksum = "43d74eb9900b9227ba98befe5d4760f9ea14ed66c3d88f04d1805ce1fdfd38f2"
+let webrtcChecksum = "22e4a0fb0514402f47a8f739dbf3011f4c5617d7c5bcfffed406cf5c11ba7c54"
 
 let package = Package(
     name: "WebRTC",
