@@ -56,16 +56,16 @@ jobs:
         cd tools_webrtc/ios
         python build_ios_libs.py
 
-    # upload-artifact will always zip files, even if it's already a zip, so we don't zip it here for now
-    #- name: Zip & generate checksum
-    #  run: |
-    #    cd webrtc_ios/src/out_ios_libs/
-    #    zip -r WebRTC.xcframework.zip WebRTC.xcframework
-    #    swift package compute-checksum WebRTC.xcframework.zip
+    # upload-artifact will always zip files, even if it's already a zip
+    - name: Zip & generate checksum
+      run: |
+        cd webrtc_ios/src/out_ios_libs/
+        zip -r WebRTC.xcframework.zip WebRTC.xcframework
+        swift package compute-checksum WebRTC.xcframework.zip
 
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
-        name: WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework
-        path: webrtc_ios/src/out_ios_libs/WebRTC.xcframework
+        name: WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip
+        path: webrtc_ios/src/out_ios_libs/WebRTC.xcframework.zip
         retention-days: 4
