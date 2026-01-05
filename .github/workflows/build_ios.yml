@@ -50,7 +50,7 @@ jobs:
         pwd
         echo ${{ github.workspace }}
         ls -ahl ${{ github.workspace }}/repo/ios/patches/*.patch
-        patch -p1 < ${{ github.workspace }}/repo/ios/patches/*.patch
+        find ${{ github.workspace }}/repo/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
 
         echo "Building..."
         cd tools_webrtc/ios
