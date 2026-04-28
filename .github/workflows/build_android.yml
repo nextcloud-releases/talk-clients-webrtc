@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Checkout app
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         path: repo
 
@@ -59,7 +59,7 @@ jobs:
         tools_webrtc/android/build_aar.py
 
     - name: Upload build
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: libwebrtc-${{ github.event.inputs.webrtc-branch }}.aar
         path: webrtc_android/src/libwebrtc.aar
