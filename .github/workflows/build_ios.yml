@@ -72,7 +72,7 @@ jobs:
         cd webrtc_ios/src/out_ios_libs/
         zip -r WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip WebRTC.xcframework
         echo "## iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}" >> $GITHUB_STEP_SUMMARY
-        echo "Swift checksum: $(swift package compute-checksum WebRTC.xcframework.zip)" >> $GITHUB_STEP_SUMMARY
+        echo "Swift checksum: $(swift package compute-checksum WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip)" >> $GITHUB_STEP_SUMMARY
 
     - name: Upload build
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
