@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Checkout app
-      uses: actions/checkout@v4
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         path: repo
 
@@ -66,16 +66,17 @@ jobs:
         cd tools_webrtc/ios
         python build_ios_libs.py
 
-    # upload-artifact will always zip files, even if it's already a zip
+    # Create a zip file here as the ones created by the artifact step might be rejected by Xcode
     - name: Zip & generate checksum
       run: |
         cd webrtc_ios/src/out_ios_libs/
-        zip -r WebRTC.xcframework.zip WebRTC.xcframework
-        swift package compute-checksum WebRTC.xcframework.zip
+        zip -r WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip WebRTC.xcframework
+        echo "## iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}" >> $GITHUB_STEP_SUMMARY
+        echo "Swift checksum: $(swift package compute-checksum WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip)" >> $GITHUB_STEP_SUMMARY
 
     - name: Upload build
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-        name: WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip
-        path: webrtc_ios/src/out_ios_libs/WebRTC.xcframework.zip
+        path: webrtc_ios/src/out_ios_libs/WebRTC-${{ github.event.inputs.webrtc-branch }}.xcframework.zip
+        archive: false
         retention-days: 4
