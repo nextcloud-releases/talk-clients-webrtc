@@ -18,10 +18,15 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  XCODE_VERSION: "26.5"
+  SIMULATOR_MODEL: iPhone 17
+  SIMULATOR_VERSION: "26.5"
+
 jobs:
   build:
     name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
-    runs-on: macos-15
+    runs-on: macos-26
 
     steps:
     - name: Checkout app
@@ -35,19 +40,19 @@ jobs:
         readlink -f depot_tools >> $GITHUB_PATH
 
     - name: Link python
-      run: sudo ln -s /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /usr/local/bin/python
+      run: sudo ln -sf /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /usr/local/bin/python
 
-    - name: Setup Xcode
+    - name: Setup Xcode ${{ env.XCODE_VERSION }}
       uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
       with:
-        xcode-version: '26.1.1'
+        xcode-version: ${{ env.XCODE_VERSION }}
 
-#    - name: Install iOS 26.1
+#    - name: Install iOS ${{ env.SIMULATOR_VERSION }}
 #      run: |
 #        xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
-#        # xcodebuild -downloadPlatform iOS -buildVersion 26.1
+#        # xcodebuild -downloadPlatform iOS -buildVersion ${{ env.SIMULATOR_VERSION }}
 
-    - name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
+    - name: Fetch WebRTC - Branch ${{ github.event.inputs.webrtc-branch }}
       run: |
         mkdir webrtc_ios && cd webrtc_ios
         fetch --nohooks webrtc_ios
@@ -56,15 +61,36 @@ jobs:
         git checkout -b branch_${{ github.event.inputs.webrtc-branch }} branch-heads/${{ github.event.inputs.webrtc-branch }}
         gclient sync -D --no-history
 
+    - name: Add Talk files and apply patches
+      working-directory: webrtc_ios/src
+      run: |
+        echo "Copying files..."
+        cp -R ${{ github.workspace }}/repo/ios/files/. .
+
         echo "Applying patches..."
-        pwd
-        echo ${{ github.workspace }}
         ls -ahl ${{ github.workspace }}/repo/ios/patches/*.patch
         find ${{ github.workspace }}/repo/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
 
-        echo "Building..."
-        cd tools_webrtc/ios
-        python build_ios_libs.py
+    - name: Run Talk frame crypto tests
+      working-directory: webrtc_ios/src
+      run: |
+        gn gen out/talk_tests --args='is_debug=false dcheck_always_on=true rtc_include_tests=true'
+        autoninja -C out/talk_tests modules/talk_frame_crypto:talk_frame_crypto_unittests
+        out/talk_tests/talk_frame_crypto_unittests
+
+    - name: Run Talk frame crypto iOS tests
+      working-directory: webrtc_ios/src
+      run: |
+        gn gen out/talk_sim --args='target_os="ios" target_environment="simulator" target_cpu="arm64" ios_enable_code_signing=false is_debug=true rtc_include_tests=true enable_run_ios_unittests_with_xctest=true'
+        autoninja -C out/talk_sim sdk:sdk_unittests testing/iossim
+
+        IOSSIM=$(find out/talk_sim -name iossim -type f -perm -u+x | head -1)
+        XCTEST=$(find out/talk_sim/sdk_unittests.app -name '*.xctest' -maxdepth 2 | head -1)
+        $IOSSIM -d "$SIMULATOR_MODEL" -s "$SIMULATOR_VERSION" -t RTCTalkKeyRingTest out/talk_sim/sdk_unittests.app "$XCTEST"
+
+    - name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
+      working-directory: webrtc_ios/src/tools_webrtc/ios
+      run: python build_ios_libs.py
 
     # Create a zip file here as the ones created by the artifact step might be rejected by Xcode
     - name: Zip & generate checksum
