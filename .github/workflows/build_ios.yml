@@ -83,7 +83,7 @@ jobs:
 
     - name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
       working-directory: webrtc_ios/src/tools_webrtc/ios
-      run: python build_ios_libs.py
+      run: python build_ios_libs.py --arch "device:arm64" "simulator:arm64"
 
     # Create a zip file here as the ones created by the artifact step might be rejected by Xcode
     - name: Zip & generate checksum

@@ -58,7 +58,7 @@ gclient sync -D
 cp -R {path-to-this-repo}/ios/files/. .
 find {path-to-this-repo}/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
 cd tools_webrtc/ios
-python build_ios_libs.py
+python build_ios_libs.py --arch "device:arm64" "simulator:arm64"
 ```
 
 If build succeeds, you will find the **WebRTC.xcframework** in `src/out_ios_libs/WebRTC.xcframework`
