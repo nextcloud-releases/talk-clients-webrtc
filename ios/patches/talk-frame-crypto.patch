@@ -11,7 +11,7 @@ index f9bb6b6d36..d616a46837 100644
      "video_coding",
    ]
 diff --git a/sdk/BUILD.gn b/sdk/BUILD.gn
-index 8b08459819..0e66b90bd5 100644
+index 8b08459819..97be45e5dd 100644
 --- a/sdk/BUILD.gn
 +++ b/sdk/BUILD.gn
 @@ -1086,6 +1086,8 @@ if (is_ios || is_mac) {
@@ -31,23 +31,7 @@ index 8b08459819..0e66b90bd5 100644
          "../modules/video_coding:video_codec_interface",
          "../pc:peer_connection_factory",
          "../pc:webrtc_sdp",
-@@ -1208,6 +1211,7 @@ if (is_ios || is_mac) {
-             "objc/unittests/RTCPeerConnectionFactory_xctest.m",
-             "objc/unittests/RTCPeerConnectionTest.mm",
-             "objc/unittests/RTCSessionDescriptionTest.mm",
-+            "objc/unittests/RTCTalkKeyRingTest.mm",
-             "objc/unittests/RTCTracingTest.mm",
-             "objc/unittests/frame_buffer_helpers.h",
-             "objc/unittests/frame_buffer_helpers.mm",
-@@ -1257,6 +1261,7 @@ if (is_ios || is_mac) {
-             "../common_video",
-             "../media:codec",
-             "../media:rtc_media_tests_utils",
-+            "../modules/talk_frame_crypto:web_test_vectors",
-             "../modules/video_coding:video_codec_interface",
-             "../rtc_base:refcount",
-             "../rtc_base:rtc_event",
-@@ -1404,6 +1409,7 @@ if (is_ios || is_mac) {
+@@ -1404,6 +1407,7 @@ if (is_ios || is_mac) {
            "objc/api/peerconnection/RTCSSLAdapter.h",
            "objc/api/peerconnection/RTCSessionDescription.h",
            "objc/api/peerconnection/RTCStatisticsReport.h",

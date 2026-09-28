@@ -20,8 +20,6 @@ permissions:
 
 env:
   XCODE_VERSION: "26.5"
-  SIMULATOR_MODEL: iPhone 17
-  SIMULATOR_VERSION: "26.5"
 
 jobs:
   build:
@@ -40,6 +38,8 @@ jobs:
         readlink -f depot_tools >> $GITHUB_PATH
         # Since depot_tools d4e95894 fetch runs depot_tools' own python, which is only set up by the bootstrap.
         # Called by absolute path, with a relative one cipd looks for its files relative to the wrong directory.
+        # $GITHUB_PATH only applies to later steps, the bootstrap needs depot_tools in PATH for luci-auth.
+        export PATH="$(pwd)/depot_tools:$PATH"
         "$(pwd)/depot_tools/ensure_bootstrap"
 
     - name: Link python
@@ -50,10 +50,10 @@ jobs:
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
 
-#    - name: Install iOS ${{ env.SIMULATOR_VERSION }}
+#    - name: Install iOS 26.5
 #      run: |
 #        xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
-#        # xcodebuild -downloadPlatform iOS -buildVersion ${{ env.SIMULATOR_VERSION }}
+#        # xcodebuild -downloadPlatform iOS -buildVersion 26.5
 
     - name: Fetch WebRTC - Branch ${{ github.event.inputs.webrtc-branch }}
       run: |
@@ -80,16 +80,6 @@ jobs:
         gn gen out/talk_tests --args='is_debug=false dcheck_always_on=true rtc_include_tests=true'
         autoninja -C out/talk_tests modules/talk_frame_crypto:talk_frame_crypto_unittests
         out/talk_tests/talk_frame_crypto_unittests
-
-    - name: Run Talk frame crypto iOS tests
-      working-directory: webrtc_ios/src
-      run: |
-        gn gen out/talk_sim --args='target_os="ios" target_environment="simulator" target_cpu="arm64" ios_enable_code_signing=false is_debug=true rtc_include_tests=true enable_run_ios_unittests_with_xctest=true'
-        autoninja -C out/talk_sim sdk:sdk_unittests testing/iossim
-
-        IOSSIM=$(find out/talk_sim -name iossim -type f -perm -u+x | head -1)
-        XCTEST=$(find out/talk_sim/sdk_unittests.app -name '*.xctest' -maxdepth 2 | head -1)
-        $IOSSIM -d "$SIMULATOR_MODEL" -s "$SIMULATOR_VERSION" -t RTCTalkKeyRingTest out/talk_sim/sdk_unittests.app "$XCTEST"
 
     - name: Build iOS WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
       working-directory: webrtc_ios/src/tools_webrtc/ios

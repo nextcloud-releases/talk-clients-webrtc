@@ -31,18 +31,14 @@ rtc_library("talk_frame_crypto") {
 }
 
 if (rtc_include_tests) {
-  rtc_source_set("web_test_vectors") {
-    visibility = [ "*" ]
-    testonly = true
-    sources = [ "test/web_test_vectors.h" ]
-  }
-
   rtc_test("talk_frame_crypto_unittests") {
     testonly = true
-    sources = [ "talk_frame_crypto_unittest.cc" ]
+    sources = [
+      "talk_frame_crypto_unittest.cc",
+      "test/web_test_vectors.h",
+    ]
     deps = [
       ":talk_frame_crypto",
-      ":web_test_vectors",
       "../../api:rtp_parameters",
       "../../api:scoped_refptr",
       "../../api/crypto:frame_decryptor_interface",
