@@ -38,6 +38,9 @@ jobs:
       run: |
         git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
         readlink -f depot_tools >> $GITHUB_PATH
+        # Since depot_tools d4e95894 fetch runs depot_tools' own python, which is only set up by the bootstrap.
+        # Called by absolute path, with a relative one cipd looks for its files relative to the wrong directory.
+        "$(pwd)/depot_tools/ensure_bootstrap"
 
     - name: Link python
       run: sudo ln -sf /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /usr/local/bin/python
