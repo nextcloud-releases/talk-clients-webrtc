@@ -11,6 +11,16 @@ Official WebRTC build guides:
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/android/README.md
 - https://webrtc.googlesource.com/src/+/main/docs/native-code/ios/README.md
 
+## Talk additions
+
+Both libraries carry the Nextcloud Talk end to end encryption module:
+
+- `files/` is copied over the WebRTC `src/` tree for both platforms (`modules/talk_frame_crypto`, the frame format shared with the web client).
+- `android/files/` and `ios/files/` hold the platform bindings (`org.webrtc.TalkKeyRing` for Android, `RTCTalkKeyRing` for iOS).
+- `patches/`, `android/patches/` and `ios/patches/` register them in the WebRTC build files, applied with `patch -p1`.
+
+The module's unit tests (`talk_frame_crypto_unittests`, with frames encrypted by the web client) run in both CI workflows before the library build.
+
 ## Build Android
 For android it is possible to build on github CI (recommended) or locally.
 Both of them create the `aar` file.
@@ -24,7 +34,6 @@ To use this inside the nextcloud android talk app, follow the steps from https:/
 - enter branch number (e.g. "1234") & confirm with "Run workflow"
 - When finished, the resulting zipped aar file should be attached to the build.
 
-
 ### Build Android lib locally (in case CI won't work)
 
 To build WebRTC for Android follow those steps:
@@ -36,7 +45,6 @@ To build WebRTC for Android follow those steps:
 First run needs around an hour. Manual interactions are needed during the run. It may happen that the script gets stuck. If this happens without any error message, just start it again.
 
 The created `aar` can be found in `result/android` afterwards.
-
 
 ## Build for iOS
 
@@ -55,8 +63,9 @@ gclient sync
 cd src
 git checkout -b branch_$BRANCH branch-heads/$BRANCH
 gclient sync -D
+cp -R {path-to-this-repo}/files/. .
 cp -R {path-to-this-repo}/ios/files/. .
-find {path-to-this-repo}/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
+find {path-to-this-repo}/patches/ {path-to-this-repo}/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
 cd tools_webrtc/ios
 python build_ios_libs.py --arch "device:arm64" "simulator:arm64"
 ```

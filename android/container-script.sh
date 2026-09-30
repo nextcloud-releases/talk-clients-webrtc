@@ -19,4 +19,12 @@ echo "***************************************************************"
 
 gclient sync -D
 sudo build/install-build-deps.sh
+
+echo "Copying files..."
+cp -R /webrtc/repo/files/. .
+cp -R /webrtc/repo/android/files/. .
+
+echo "Applying patches..."
+find /webrtc/repo/patches/ /webrtc/repo/android/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
+
 tools_webrtc/android/build_aar.py
