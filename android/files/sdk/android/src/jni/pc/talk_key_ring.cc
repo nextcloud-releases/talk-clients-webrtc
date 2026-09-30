@@ -82,3 +82,5 @@ static jlong JNI_TalkKeyRing_CreateFrameDecryptor(JNIEnv* jni,
 
 }  // namespace jni
 }  // namespace webrtc
+
+DEFINE_JNI(TalkKeyRing)
