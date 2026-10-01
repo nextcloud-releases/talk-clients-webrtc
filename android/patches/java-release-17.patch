@@ -1,0 +1,22 @@
+--- a/build/android/gyp/compile_java.py
++++ b/build/android/gyp/compile_java.py
+@@ -708,7 +708,7 @@
+         '--release',
+         # Keep consistent with javac_cmd in //build/android/gyp/turbine.py.
+         # LINT.IfChange
+-        '25',
++        '17',
+         # LINT.ThenChange(//depot/chromium/components/cronet/gn2bp/templates/Android.extras.bp.template)
+         # Chromium only allows UTF8 source files.  Being explicit avoids
+         # javac pulling a default encoding from the user's environment.
+--- a/build/android/gyp/turbine.py
++++ b/build/android/gyp/turbine.py
+@@ -107,7 +107,7 @@
+     # //build/android/gyp/compile_java.py and
+     # compileOptions in //build/android/gradle/android.jinja
+     # LINT.IfChange
+-    javac_cmd = ['--release', '25']
++    javac_cmd = ['--release', '17']
+     # LINT.ThenChange(//depot/chromium/components/cronet/gn2bp/templates/Android.extras.bp.template)
+ 
+     # Turbine reads lists from command line args by consuming args until one
