@@ -55,6 +55,27 @@ jobs:
         git checkout -b branch_${{ github.event.inputs.webrtc-branch }} branch-heads/${{ github.event.inputs.webrtc-branch }}
         gclient sync -D --no-history
 
+    - name: Add Talk files and apply patches
+      working-directory: webrtc_android/src
+      run: |
+        echo "Copying files..."
+        cp -R ${{ github.workspace }}/repo/files/. .
+        cp -R ${{ github.workspace }}/repo/android/files/. .
+
+        echo "Applying patches..."
+        ls -ahl ${{ github.workspace }}/repo/patches/*.patch ${{ github.workspace }}/repo/android/patches/*.patch
+        find ${{ github.workspace }}/repo/patches/ ${{ github.workspace }}/repo/android/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
+
+    - name: Run Talk frame crypto tests
+      working-directory: webrtc_android/src
+      run: |
+        gn gen out/talk_tests --args='is_debug=false dcheck_always_on=true rtc_include_tests=true'
+        autoninja -C out/talk_tests modules/talk_frame_crypto:talk_frame_crypto_unittests
+        out/talk_tests/talk_frame_crypto_unittests
+
+    - name: Build Android WebRTC lib - Branch ${{ github.event.inputs.webrtc-branch }}
+      working-directory: webrtc_android/src
+      run: |
         echo "Building..."
         tools_webrtc/android/build_aar.py
 

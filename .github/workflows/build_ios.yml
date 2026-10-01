@@ -68,11 +68,12 @@ jobs:
       working-directory: webrtc_ios/src
       run: |
         echo "Copying files..."
+        cp -R ${{ github.workspace }}/repo/files/. .
         cp -R ${{ github.workspace }}/repo/ios/files/. .
 
         echo "Applying patches..."
-        ls -ahl ${{ github.workspace }}/repo/ios/patches/*.patch
-        find ${{ github.workspace }}/repo/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
+        ls -ahl ${{ github.workspace }}/repo/patches/*.patch ${{ github.workspace }}/repo/ios/patches/*.patch
+        find ${{ github.workspace }}/repo/patches/ ${{ github.workspace }}/repo/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
 
     - name: Run Talk frame crypto tests
       working-directory: webrtc_ios/src
