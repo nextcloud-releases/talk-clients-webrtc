@@ -55,12 +55,44 @@ gclient sync
 cd src
 git checkout -b branch_$BRANCH branch-heads/$BRANCH
 gclient sync -D
-git apply {path-to-this-repo}/ios/patches/*.patch
+cp -R {path-to-this-repo}/ios/files/. .
+find {path-to-this-repo}/ios/patches/ -name "*.patch" -print0 | xargs -0 -n 1 patch -p1 -i
 cd tools_webrtc/ios
-python build_ios_libs.py
+python build_ios_libs.py --arch "device:arm64" "simulator:arm64"
 ```
 
 If build succeeds, you will find the **WebRTC.xcframework** in `src/out_ios_libs/WebRTC.xcframework`
+
+`patch` is used instead of `git apply`, which rejects patches that only apply with fuzz on newer branches.
+
+### Talk changes to WebRTC
+
+- `ios/files`: files added to WebRTC, in the layout of `src`, e.g. the end-to-end call encryption.
+- `ios/patches`: changes to existing WebRTC files, e.g. `talk-frame-crypto.patch` adds the files above to the build.
+
+After changing them in a WebRTC checkout, copy them back and regenerate the patch from `src`:
+
+```
+cp -R modules/talk_frame_crypto {path-to-this-repo}/ios/files/modules/
+cp sdk/objc/api/peerconnection/RTCTalkKeyRing.* {path-to-this-repo}/ios/files/sdk/objc/api/peerconnection/
+git diff -- modules/BUILD.gn sdk/BUILD.gn sdk/objc/DEPS > {path-to-this-repo}/ios/patches/talk-frame-crypto.patch
+```
+
+The files in `modules/talk_frame_crypto` implement the frame format that Nextcloud Talk uses for end-to-end encryption and are licensed under Apache-2.0.
+
+### Running the Talk frame crypto tests
+
+They run on the Mac, from `src`:
+
+```
+gn gen out/talk_tests --args='is_debug=false dcheck_always_on=true rtc_include_tests=true'
+autoninja -C out/talk_tests modules/talk_frame_crypto:talk_frame_crypto_unittests
+out/talk_tests/talk_frame_crypto_unittests
+```
+
+The Objective-C API is tested in the Talk iOS app.
+
+Newer Xcode versions may not be supported by the WebRTC branch, use the one from `.github/workflows/build_ios.yml`, e.g. with `export DEVELOPER_DIR=/Applications/Xcode_X.app/Contents/Developer` before `gn gen`.
 
 ### Building on M1 Macs
 
@@ -72,10 +104,7 @@ sudo ln -s /Applications/Xcode.app/Contents/Developer/usr/bin/python3 /usr/local
 
 ### Building multiple architectures
 
-By default the following architectures are build:
-```
-'device:arm64', 'simulator:arm64', 'simulator:x64'
-```
+The Talk app only uses arm64, so only `device:arm64` and `simulator:arm64` are built. Without `--arch` the script also builds `simulator:x64`.
 
 It is also possible to build for catalyst, the build command would look like this:
 
@@ -86,5 +115,5 @@ python build_ios_libs.py --arch "device:arm64" "simulator:arm64" "simulator:x64"
 ### Creating a debug build
 
 ```
-python build_ios_libs.py --build_config debug
+python build_ios_libs.py --arch "device:arm64" "simulator:arm64" --build_config debug
 ```

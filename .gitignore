@@ -2,3 +2,4 @@ result
 webrtc_ios
 workdir
 .DS_Store
+.build

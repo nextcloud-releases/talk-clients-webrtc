@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: Apache-2.0
+
+import("../../webrtc.gni")
+
+rtc_library("talk_frame_crypto") {
+  visibility = [ "*" ]
+  sources = [
+    "talk_frame_decryptor.cc",
+    "talk_frame_decryptor.h",
+    "talk_frame_encryptor.cc",
+    "talk_frame_encryptor.h",
+    "talk_frame_format.h",
+    "talk_key_ring.cc",
+    "talk_key_ring.h",
+  ]
+  deps = [
+    "../../api:make_ref_counted",
+    "../../api:ref_count",
+    "../../api:rtp_parameters",
+    "../../api:scoped_refptr",
+    "../../api/crypto:frame_decryptor_interface",
+    "../../api/crypto:frame_encryptor_interface",
+    "../../rtc_base:checks",
+    "../../rtc_base:crypto_random",
+    "../../rtc_base:macromagic",
+    "../../rtc_base/synchronization:mutex",
+    "//third_party/abseil-cpp/absl/base:nullability",
+    "//third_party/boringssl",
+  ]
+}
+
+if (rtc_include_tests) {
+  rtc_test("talk_frame_crypto_unittests") {
+    testonly = true
+    sources = [
+      "talk_frame_crypto_unittest.cc",
+      "test/web_test_vectors.h",
+    ]
+    deps = [
+      ":talk_frame_crypto",
+      "../../api:rtp_parameters",
+      "../../api:scoped_refptr",
+      "../../api/crypto:frame_decryptor_interface",
+      "../../test:test_support",
+      "//third_party/boringssl",
+    ]
+  }
+}
