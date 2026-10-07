@@ -1,0 +1,12 @@
+diff --git a/modules/BUILD.gn b/modules/BUILD.gn
+index f9bb6b6d36..d616a46837 100644
+--- a/modules/BUILD.gn
++++ b/modules/BUILD.gn
+@@ -20,6 +20,7 @@ group("modules") {
+     "remote_bitrate_estimator",
+     "rtp_rtcp",
+     "sframe",
++    "talk_frame_crypto",
+     "utility",
+     "video_coding",
+   ]

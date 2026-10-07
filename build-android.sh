@@ -30,6 +30,7 @@ docker container run --interactive \
   --env WEBRTC_BRANCH="$BRANCH" \
   --name webrtc-build \
   --volume "$(pwd)"/workdir:/webrtc/workdir:rw \
+  --volume "$(pwd)":/webrtc/repo:ro \
   webrtc-build:latest
 
 mkdir -p result/android
