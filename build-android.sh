@@ -33,5 +33,7 @@ docker container run --interactive \
   --volume "$(pwd)":/webrtc/repo:ro \
   webrtc-build:latest
 
+android/check-aar.sh workdir/src/libwebrtc.aar
+
 mkdir -p result/android
 cp workdir/src/*.aar result/android

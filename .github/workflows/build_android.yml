@@ -79,6 +79,9 @@ jobs:
         echo "Building..."
         tools_webrtc/android/build_aar.py
 
+    - name: Check that the AAR contains all referenced classes
+      run: repo/android/check-aar.sh webrtc_android/src/libwebrtc.aar
+
     - name: Upload build
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
